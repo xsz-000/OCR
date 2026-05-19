@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#F5F5F7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%236C63FF%22/><text x=%2250%22 y=%2266%22 font-size=%2254%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22system-ui,sans-serif%22 font-weight=%22600%22>E</text></svg>">
+  <title>AI 作文批改 — 教师助手</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/home.css">
+  <link rel="stylesheet" href="styles/loading.css">
+  <link rel="stylesheet" href="styles/result.css">
+  <link rel="stylesheet" href="styles/animations.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ==================== HOME ==================== -->
+    <section id="page-home" class="page page-home active">
+      <div class="bg-gradient"></div>
+      <div class="home-content">
+        <div class="logo">
+          <div class="logo-icon press-haptic">
+            <svg viewBox="0 0 40 40" width="24" height="24" fill="none">
+              <path d="M8 4h16l4 8-12 20L4 12l4-8z" fill="white" opacity="0.95"/>
+              <circle cx="20" cy="12" r="3" fill="white" opacity="0.6"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="hero">
+          <h1 class="hero-title">
+            拍照上传学生作文<br>AI 为你生成批改报告
+          </h1>
+          <p class="hero-subtitle">
+            告别繁琐的作文批改，专注教学<br>让 AI 成为你的得力助教
+          </p>
+        </div>
+
+        <div class="upload-card" id="uploadCard">
+          <div class="upload-card-inner">
+            <div class="upload-icon">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <rect x="3" y="6" width="34" height="28" rx="6" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="20" cy="18" r="5" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M10 32l7-10 5 7 3-4 5 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p class="upload-text">上传学生作文照片</p>
+            <p class="upload-hint">支持 JPG、PNG、HEIC 格式</p>
+            <button class="btn btn-primary press-haptic" id="uploadBtn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M8 11V3"/>
+                <path d="M5 6l3-3 3 3"/>
+                <path d="M2 12v2h12v-2"/>
+              </svg>
+              上传学生作文
+            </button>
+            <input type="file" id="fileInput" accept="image/*" capture="environment" hidden>
+          </div>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          学生数据安全加密，仅保存在本地
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== LOADING ==================== -->
+    <section id="page-loading" class="page page-loading">
+      <div class="loading-content">
+        <div class="loading-indicator">
+          <div class="loading-ring"></div>
+          <div class="loading-ring loading-ring-active"></div>
+        </div>
+        <h2 class="loading-title">AI 正在批改中</h2>
+        <div class="loading-steps">
+          <div class="loading-step" data-step="0">
+            <div class="step-dot"></div>
+            <span>扫描作文</span>
+          </div>
+          <div class="loading-step" data-step="1">
+            <div class="step-dot"></div>
+            <span>识别文字</span>
+          </div>
+          <div class="loading-step" data-step="2">
+            <div class="step-dot"></div>
+            <span>分析内容</span>
+          </div>
+          <div class="loading-step" data-step="3">
+            <div class="step-dot"></div>
+            <span>生成评语</span>
+          </div>
+        </div>
+        <div class="loading-progress">
+          <div class="loading-progress-track">
+            <div class="loading-progress-fill" id="loadingProgressFill"></div>
+          </div>
+          <span class="loading-progress-text" id="loadingProgressText">0%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RESULT ==================== -->
+    <section id="page-result" class="page page-result">
+      <div class="result-content">
+        <div class="result-header">
+          <button class="btn-icon" id="backBtn" aria-label="返回">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <h2>批改结果</h2>
+          <button class="btn-icon" id="shareBtn" aria-label="分享">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Score -->
+        <div class="score-section glass">
+          <div class="score-circle">
+            <svg width="112" height="112" viewBox="0 0 112 112">
+              <circle class="score-ring-bg" cx="56" cy="56" r="48"/>
+              <circle class="score-ring-fill" id="scoreRing" cx="56" cy="56" r="48"
+                      stroke-dasharray="301.59" stroke-dashoffset="301.59"/>
+            </svg>
+            <div class="score-number">
+              <span class="score-value" id="scoreValue">87</span>
+              <span class="score-total">/ 100</span>
+            </div>
+          </div>
+          <div class="score-grade" id="scoreGrade">优秀</div>
+          <div class="score-tags" id="scoreTags">
+            <span class="tag">结构清晰</span>
+            <span class="tag">语言生动</span>
+            <span class="tag">立意深刻</span>
+          </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="result-section glass">
+          <div class="section-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            评语
+          </div>
+          <div class="comment-text" id="commentText">
+            本篇习作立意明确，能够围绕中心展开论述。语言表达通顺流畅，结构完整。如在修辞手法和细节描写上进一步打磨，会是更出色的作品。整体来看，学生的基础写作能力扎实，值得肯定。
+          </div>
+        </div>
+
+        <!-- Errors -->
+        <div class="result-section glass">
+          <div class="section-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            用字分析
+          </div>
+          <div class="errors-list" id="errorsList">
+            <div class="error-item">
+              <div class="error-char">
+                <span class="wrong">励</span>
+                <span class="arrow">→</span>
+                <span class="correct">厉</span>
+              </div>
+              <div class="error-detail">"鼓厉" 应为 "鼓励"</div>
+            </div>
+            <div class="error-item">
+              <div class="error-char">
+                <span class="wrong">既</span>
+                <span class="arrow">→</span>
+                <span class="correct">即</span>
+              </div>
+              <div class="error-detail">"既使" 应为 "即使"</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Red Pen -->
+        <div class="result-section glass">
+          <div class="section-label is-red">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+            </svg>
+            批注
+          </div>
+          <div class="redpen-markup" id="redpenMarkup">
+            <p>开头点题<span class="rp-accent">很到位</span>，能够迅速抓住读者的注意力。中间段落事例充分，建议在<span class="rp-underline">细节描写上再深入</span>。结尾的升华部分<span class="rp-accent">富有感染力</span>，整体是一篇优秀的习作。</p>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="result-actions">
+          <button class="btn btn-primary press-haptic" id="exportPdfBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            导出 PDF
+          </button>
+          <button class="btn btn-secondary press-haptic" id="newEssayBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+            批改下一篇作文
+          </button>
+        </div>
+
+        <p class="result-footer">AI 助教生成 · 辅助教师参考</p>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/ocr.js"></script>
+  <script src="js/grader.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/animations.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

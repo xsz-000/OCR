@@ -1,0 +1,14 @@
+﻿/* =====================================================
+   animations.css — iOS 原生微动效
+   ===================================================== */
+
+/* ====== 轻按缩放 — 模拟 haptic 反馈 ====== */
+.press-haptic {
+  transition: transform 0.25s var(--ease-ios), box-shadow 0.25s var(--ease-ios);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.press-haptic:active {
+  transform: scale(0.96);
+  transition-duration: 0.05s;
+}

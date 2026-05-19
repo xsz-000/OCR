@@ -1,0 +1,276 @@
+﻿/* =====================================================
+   result.css — 结果页
+   Staggered spring entrances, iOS readability
+   ===================================================== */
+
+.page-result {
+  background: var(--bg);
+}
+
+.result-content {
+  padding: 0 20px calc(48px + var(--safe-bottom));
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* ====== Header — 毛玻璃粘性导航 ====== */
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(245, 245, 247, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+
+.result-header h2 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+/* ====== Score Section ====== */
+.score-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px 28px;
+  margin-bottom: var(--gap-sm);
+}
+
+.score-circle {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.score-ring-bg {
+  fill: none;
+  stroke: var(--border-subtle);
+  stroke-width: 5;
+}
+
+.score-ring-fill {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 5;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 1.8s var(--ease-ios);
+}
+
+.score-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-value {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.score-total {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.score-grade {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+}
+
+.score-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 16px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-radius: 60px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* ====== Card Sections ====== */
+.result-section {
+  padding: 24px 20px;
+  margin-bottom: var(--gap-sm);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 590;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 14px;
+}
+
+.section-label svg {
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.section-label.is-red svg {
+  color: var(--red);
+  opacity: 0.8;
+}
+
+/* Comment */
+.comment-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+/* Errors */
+.errors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.error-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: rgba(255, 77, 77, 0.06);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 77, 77, 0.08);
+  min-height: 48px;
+}
+
+.error-char {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.error-char .wrong {
+  color: var(--red);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.error-char .arrow {
+  color: var(--text-tertiary);
+  margin: 0 6px;
+  font-weight: 400;
+}
+
+.error-char .correct {
+  color: var(--green);
+}
+
+.error-detail {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Red Pen */
+.redpen-markup {
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+  padding-left: 16px;
+  border-left: 2px solid rgba(255, 77, 77, 0.2);
+}
+
+.rp-accent {
+  color: var(--red);
+  font-weight: 500;
+}
+
+.rp-underline {
+  color: var(--red);
+  text-decoration: underline wavy;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+/* ====== Actions — 大按钮易触 ====== */
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.result-actions .btn {
+  width: 100%;
+  padding: 18px;
+  min-height: 56px;
+  border-radius: 60px;
+  font-size: 17px;
+}
+
+/* ====== Footer ====== */
+.result-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 24px;
+  letter-spacing: 0.02em;
+}
+
+/* ====== Entry Animations — iOS 弹簧交错 ====== */
+.result-section,
+.score-section,
+.result-actions,
+.result-footer {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page.active .result-section,
+.page.active .score-section,
+.page.active .result-actions,
+.page.active .result-footer {
+  animation: springUp 0.7s var(--ease-ios) forwards;
+}
+
+.page.active .score-section { animation-delay: 0.02s; }
+.page.active .result-section:nth-of-type(1) { animation-delay: 0.1s; }
+.page.active .result-section:nth-of-type(2) { animation-delay: 0.18s; }
+.page.active .result-section:nth-of-type(3) { animation-delay: 0.26s; }
+.page.active .result-section:nth-of-type(4) { animation-delay: 0.34s; }
+.page.active .result-actions { animation-delay: 0.42s; }
+.page.active .result-footer { animation-delay: 0.5s; }
+
+@keyframes springUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

@@ -1,0 +1,210 @@
+﻿/* =====================================================
+   home.css — 首页
+   Native iOS centering, spring interactions
+   ===================================================== */
+
+.page-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.bg-gradient {
+  position: fixed;
+  top: -40%;
+  left: -30%;
+  width: 160%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(108, 99, 255, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(108, 99, 255, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 28px 40px;
+  max-width: 380px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* ====== Logo ====== */
+.logo {
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: heroFadeIn 0.8s var(--ease-ios) 0.1s forwards;
+}
+
+.logo-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px rgba(108, 99, 255, 0.1), 0 8px 24px rgba(108, 99, 255, 0.15);
+  transition: transform 0.4s var(--ease-ios);
+}
+
+.logo-icon:active {
+  transform: scale(0.92);
+}
+
+/* ====== Hero ====== */
+.hero {
+  text-align: center;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: heroFadeIn 0.8s var(--ease-ios) 0.15s forwards;
+}
+
+.hero-title {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.hero-subtitle {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+/* ====== Upload Card — 弹簧触感 ====== */
+.upload-card {
+  width: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px) saturate(1.15);
+  -webkit-backdrop-filter: blur(30px) saturate(1.15);
+  border: 1.5px dashed rgba(108, 99, 255, 0.15);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  margin-bottom: 32px;
+  cursor: pointer;
+  opacity: 0;
+  animation: heroFadeIn 0.8s var(--ease-ios) 0.25s forwards;
+  transition: border-color 0.4s var(--ease-ios), box-shadow 0.4s var(--ease-ios), transform 0.3s var(--ease-ios), background 0.4s var(--ease-ios);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.upload-card:active {
+  transform: scale(0.98);
+  transition-duration: 0.08s;
+}
+
+.upload-card.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  transform: scale(1.01);
+}
+
+.upload-card-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 28px 40px;
+}
+
+.upload-icon {
+  margin-bottom: 20px;
+  color: var(--text-tertiary);
+  transition: color 0.3s var(--ease-ios), transform 0.4s var(--ease-ios);
+}
+
+.upload-card:active .upload-icon {
+  transform: scale(0.92);
+}
+
+.upload-text {
+  font-size: 17px;
+  font-weight: 590;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.upload-hint {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: 24px;
+}
+
+.upload-card .btn-primary {
+  min-width: 180px;
+  font-size: 16px;
+  padding: 16px 28px;
+}
+
+/* ====== Privacy Note ====== */
+.privacy-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.01em;
+  opacity: 0;
+  animation: heroFadeIn 0.8s var(--ease-ios) 0.35s forwards;
+}
+
+.privacy-note svg {
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+/* ====== Preview ====== */
+.preview-card {
+  width: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px) saturate(1.15);
+  -webkit-backdrop-filter: blur(30px) saturate(1.15);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+  margin-bottom: 24px;
+  animation: heroFadeIn 0.6s var(--ease-ios);
+}
+
+.preview-card img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  background: #1D1D1F;
+  display: block;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 10px;
+  padding: 14px 18px;
+}
+
+.preview-actions .btn {
+  flex: 1;
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 40px;
+  min-height: 48px;
+}
+
+/* ====== Animations ====== */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

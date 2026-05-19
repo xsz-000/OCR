@@ -1,0 +1,255 @@
+﻿/* =====================================================
+   main.css — 全局基础样式
+   Design: Native iOS / Apple Design Awards quality
+   ===================================================== */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --accent: #6C63FF;
+  --accent-dim: rgba(108, 99, 255, 0.12);
+  --accent-glow: rgba(108, 99, 255, 0.18);
+
+  --red: #FF4D4D;
+  --green: #34C759;
+
+  --bg: #F5F5F7;
+  --surface: #FFFFFF;
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --text-tertiary: #A1A1A6;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-glass: rgba(255, 255, 255, 0.6);
+
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0, 0, 0, 0.02);
+  --glass-shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+
+  --radius-sm: 13px;
+  --radius-md: 20px;
+  --radius-lg: 30px;
+
+  --gap-xs: 8px;
+  --gap-sm: 16px;
+  --gap-md: 24px;
+  --gap-lg: 40px;
+
+  /* 安全区域 — 适配 Dynamic Island / 刘海屏 */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --font: -apple-system, "SF Pro Display", "SF Pro Text", "Helvetica Neue",
+          "PingFang SC", "Microsoft YaHei", sans-serif;
+
+  /* iOS 原生曲线 */
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ====== Pages — 原生导航栏过渡 ====== */
+.page {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s var(--ease-ios), visibility 0.5s var(--ease-ios);
+  /* 适配刘海屏底部 */
+  padding-bottom: var(--safe-bottom);
+}
+
+.page.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 页面进场 + 退场（类似 UINavigationController push） */
+.page.page-enter {
+  animation: iosPushIn 0.55s var(--ease-ios) forwards;
+}
+
+.page.page-leave {
+  animation: iosPushOut 0.4s var(--ease-ios) forwards;
+}
+
+@keyframes iosPushIn {
+  0% {
+    opacity: 0;
+    transform: translateX(40px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes iosPushOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-30px) scale(0.98);
+  }
+}
+
+/* ====== Buttons — 44pt 最小触控目标 ====== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 17px 32px;
+  min-height: 52px;
+  border: none;
+  border-radius: 60px;
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 590;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  /* 触摸反馈瞬间 */
+  transition: transform 0.25s var(--ease-ios), box-shadow 0.3s var(--ease-ios), background 0.25s var(--ease-ios);
+  outline: none;
+}
+
+.btn:active {
+  transform: scale(0.96);
+  transition-duration: 0.08s;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 16px var(--accent-glow);
+}
+
+.btn-primary:active {
+  background: #5A52E0;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.1) inset, 0 2px 8px var(--accent-glow);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-secondary:active {
+  background: #F0F0F2;
+  border-color: rgba(0,0,0,0.1);
+}
+
+/* 图标按钮 — 44x44pt Apple HIG */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--accent);
+  transition: background 0.2s var(--ease-ios), transform 0.15s var(--ease-ios);
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.btn-icon:active {
+  background: var(--accent-dim);
+  transform: scale(0.88);
+  transition-duration: 0.06s;
+}
+
+/* ====== Glass Card — 更通透 ====== */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px) saturate(1.15);
+  -webkit-backdrop-filter: blur(30px) saturate(1.15);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow);
+}
+
+/* ====== Scrollbar ====== */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 2px; }
+
+/* ====== Toast — iOS 风格 ====== */
+.toast {
+  position: fixed;
+  bottom: calc(60px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(29, 29, 31, 0.88);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  color: #F5F5F7;
+  padding: 14px 28px;
+  border-radius: 60px;
+  font-size: 15px;
+  font-weight: 500;
+  z-index: 999;
+  animation: toastIn 0.5s var(--ease-ios);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.toast.out {
+  opacity: 0;
+  transform: translateX(-50%) translateY(8px) scale(0.96);
+  transition: all 0.35s var(--ease-ios);
+}
+
+@keyframes toastIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
