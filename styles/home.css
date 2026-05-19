@@ -208,3 +208,54 @@
     transform: translateY(0);
   }
 }
+
+/* ====== Grade Picker — iOS 风格 ====== */
+.grade-picker {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.grade-label {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.01em;
+  margin-bottom: 10px;
+}
+
+.grade-options {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.grade-option {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 12px;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-ios);
+  min-height: 34px;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: 0.01em;
+}
+
+.grade-option:active {
+  transform: scale(0.94);
+  transition-duration: 0.08s;
+}
+
+.grade-option.selected {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}

@@ -4,9 +4,11 @@
     uploadedFile: null,
     ocrText: '',
     gradingResult: null,
+    gradeLevel: 'm1',
   },
 
   init() {
+    Router.init();
     this.bindEvents();
   },
 
@@ -15,8 +17,15 @@
     const fileInput = document.getElementById('fileInput');
     const uploadCard = document.getElementById('uploadCard');
 
-    uploadBtn.addEventListener('click', (e) => e.stopPropagation());
-    uploadCard.addEventListener('click', () => fileInput.click());
+    uploadBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
+
+    uploadCard.addEventListener('click', (e) => {
+      if (e.target.closest('.btn-primary') || e.target.closest('.grade-option')) return;
+      fileInput.click();
+    });
 
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -43,6 +52,15 @@
       }
     });
 
+    document.querySelectorAll('.grade-option').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.grade-option').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        this.state.gradeLevel = btn.dataset.grade;
+      });
+    });
+
     document.getElementById('backBtn').addEventListener('click', () => Router.go('home'));
 
     document.getElementById('newEssayBtn').addEventListener('click', () => {
@@ -66,7 +84,7 @@
       const ocrText = await OCR.recognize(file, (p) => this.updateProgress(p));
       this.state.ocrText = ocrText;
 
-      const result = await Grader.grade(ocrText, (step) => this.updateStep(step));
+      const result = await Grader.grade(ocrText, this.state.gradeLevel, (step) => this.updateStep(step));
       this.state.gradingResult = result;
 
       this.renderResult(result);
@@ -98,7 +116,7 @@
 
   renderResult(result) {
     document.getElementById('scoreValue').textContent = result.score;
-    document.getElementById('scoreGrade').textContent = result.grade;
+    document.getElementById('scoreGrade').textContent = result.grade + '（' + result.gradeLevel + '）';
 
     const ring = document.getElementById('scoreRing');
     const circ = 2 * Math.PI * 48;
@@ -115,13 +133,25 @@
 
     document.getElementById('commentText').textContent = result.comment;
 
+    const detailsEl = document.getElementById('scoreDetails');
+    if (result.details && result.details.length > 0) {
+      detailsEl.innerHTML = result.details.map(d => {
+        const isMinus = d.score.startsWith('-');
+        const isZero = d.score === '0';
+        return '<div class="detail-row">' +
+          '<span class="detail-label">' + d.item + '</span>' +
+          '<span class="detail-score ' + (isMinus ? 'detail-minus' : isZero ? 'detail-zero' : 'detail-plus') + '">' + d.score + '</span>' +
+        '</div>';
+      }).join('');
+    }
+
     const errorsEl = document.getElementById('errorsList');
     if (result.errors && result.errors.length > 0) {
       errorsEl.innerHTML = result.errors.map(e =>
         '<div class="error-item">' +
           '<div class="error-char">' +
             '<span class="wrong">' + e.wrong + '</span>' +
-            '<span class="arrow">→</span>' +
+            '<span class="arrow">\u2192</span>' +
             '<span class="correct">' + e.correct + '</span>' +
           '</div>' +
           '<div class="error-detail">' + e.detail + '</div>' +
@@ -132,6 +162,27 @@
     }
 
     document.getElementById('redpenMarkup').innerHTML = result.redpenMarkup;
+
+    // === 手写改写批注 ===
+    const rewriteList = document.getElementById('rewriteList');
+    if (result.rewrites && result.rewrites.length > 0) {
+      document.getElementById('rewriteCard').style.display = '';
+      rewriteList.innerHTML = result.rewrites.map(r =>
+        '<div class="rewrite-item">' +
+          '<div class="rewrite-original"><span class="rewrite-label">原文</span><span>' + App.escapeHtml(r.original) + '</span></div>' +
+          '<div class="rewrite-handwrite"><span class="rewrite-label">\u270d\ufe0f 改写</span><span class="handwrite-text">' + App.escapeHtml(r.rewrite) + '</span></div>' +
+          (r.issue ? '<div class="rewrite-issue">' + r.issue + '</div>' : '') +
+        '</div>'
+      ).join('');
+    } else {
+      document.getElementById('rewriteCard').style.display = 'none';
+    }
+  },
+
+  escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   },
 
   handleShare() {
@@ -163,7 +214,6 @@
   },
 
   triggerHaptic() {
-    // 模拟 iOS 轻触反馈（视觉 + 触觉 API）
     try {
       if (window.navigator && window.navigator.vibrate) {
         window.navigator.vibrate(8);
@@ -173,5 +223,3 @@
 };
 
 document.addEventListener('DOMContentLoaded', () => App.init());
-
-

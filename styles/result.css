@@ -274,3 +274,148 @@
     transform: translateY(0) scale(1);
   }
 }
+
+/* ====== Score Details — 评分明细 ====== */
+.score-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  min-height: 44px;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row.detail-total {
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 2px solid var(--border-subtle);
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  flex: 1;
+  padding-right: 12px;
+}
+
+.detail-score {
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  min-width: 32px;
+  text-align: right;
+}
+
+.detail-plus {
+  color: var(--green);
+}
+
+.detail-minus {
+  color: var(--red);
+}
+
+.detail-zero {
+  color: var(--text-tertiary);
+}
+
+.detail-total .detail-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+.detail-total .detail-score {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ====== Rewrite Handwrite — 手写改写批注 ====== */
+.rewrite-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rewrite-item {
+  background: rgba(255, 77, 77, 0.04);
+  border: 1px solid rgba(255, 77, 77, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+
+.rewrite-original {
+  display: flex;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.rewrite-original .rewrite-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  background: var(--border-subtle);
+  padding: 1px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.rewrite-handwrite {
+  display: flex;
+  gap: 8px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--red);
+  margin-bottom: 6px;
+}
+
+.rewrite-handwrite .rewrite-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  background: var(--red);
+  padding: 1px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.handwrite-text {
+  font-family: "Ma Shan Zheng", "QingSongShouXieTi", "QingSong", "清松手写体", "KaiTi", "STKaiti", "楷体", cursive, serif;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #CC0000;
+  letter-spacing: 0.02em;
+  text-decoration: underline wavy rgba(204, 0, 0, 0.3);
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  padding: 2px 0;
+}
+
+.rewrite-issue {
+  font-size: 12px;
+  color: rgba(255, 77, 77, 0.7);
+  padding-left: 42px;
+  line-height: 1.5;
+}
+
+

@@ -9,6 +9,8 @@
   box-sizing: border-box;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&amp;display=swap');
+
 :root {
   --accent: #6C63FF;
   --accent-dim: rgba(108, 99, 255, 0.12);
@@ -253,3 +255,4 @@ body {
     transform: translateX(-50%) translateY(0) scale(1);
   }
 }
+
