@@ -93,6 +93,7 @@
     } catch (error) {
       console.error(error);
       this.showToast(error.message || '批改失败，请重试');
+      console.error('完整错误:', error);
       setTimeout(() => Router.go('home'), 1200);
     }
   },
@@ -223,3 +224,4 @@
 };
 
 document.addEventListener('DOMContentLoaded', () => App.init());
+
