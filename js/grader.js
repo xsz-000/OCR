@@ -1,10 +1,43 @@
 ﻿// ===========================================================
 // grader.js — 作文评分引擎（本地兜底）
-// 当 DeepSeek API 返回的评分数据不完整时使用
+// 返回完整字段，包括 redpenMarkup
 // ===========================================================
 const Grader = {
-  // 本地分析：根据 OCR 文本做简单评分（API主评分失败时兜底）
-  analyze(text, info, displayLabel) {
+  async grade(text, gradeLevel, onStep) {
+    // 如果有 gradeResult（来自 API），优先用
+    if (App.state.gradingResult) {
+      const r = App.state.gradingResult;
+      // 补全缺失字段
+      if (!r.redpenMarkup) r.redpenMarkup = this.buildRedpenMarkup(text, r.errors || [], r.rewrites || []);
+      if (!r.gradeLevel) r.gradeLevel = this.getLevelLabel(gradeLevel);
+      if (!r.originalText) r.originalText = text;
+      return r;
+    }
+
+    // 否则本地分析
+    return this.analyze(text, gradeLevel);
+  },
+
+  getGradeInfo(gradeLevel) {
+    const rules = {
+      p3: { baseScore: 35, minChars: 250, idealChars: 400, expectPara: 3, label: '小学三年级' },
+      p4: { baseScore: 35, minChars: 300, idealChars: 450, expectPara: 3, label: '小学四年级' },
+      p5: { baseScore: 35, minChars: 350, idealChars: 500, expectPara: 4, label: '小学五年级' },
+      p6: { baseScore: 35, minChars: 400, idealChars: 550, expectPara: 4, label: '小学六年级' },
+      m1: { baseScore: 30, minChars: 500, idealChars: 700, expectPara: 4, label: '初中一年级' },
+      m2: { baseScore: 30, minChars: 600, idealChars: 800, expectPara: 5, label: '初中二年级' },
+      m3: { baseScore: 30, minChars: 600, idealChars: 800, expectPara: 5, label: '初中三年级' },
+    };
+    return rules[gradeLevel] || rules.m1;
+  },
+
+  getLevelLabel(gradeLevel) {
+    return this.getGradeInfo(gradeLevel).label;
+  },
+
+  analyze(text, gradeLevel) {
+    const info = this.getGradeInfo(gradeLevel);
+    const displayLabel = info.label;
     const chars = text.replace(/[\s\n\r]/g, '');
     const sentences = text.split(/[。！？.!?]/).filter(s => s.trim().length > 0);
     const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
@@ -55,7 +88,36 @@ const Grader = {
       (errors.length > 0 ? '发现' + errors.length + '处用字问题。' : '用字准确。') +
       '继续加油。';
 
-    return { score, grade, gradeLevel: displayLabel, tags, details, comment, errors, rewrites: [] };
+    // 构建红色批注 HTML
+    const redpenMarkup = this.buildRedpenMarkup(text, errors, []);
+
+    return {
+      score,
+      grade,
+      gradeLevel: displayLabel,
+      originalText: text,
+      tags,
+      details,
+      comment,
+      errors,
+      rewrites: [],
+      redpenMarkup
+    };
+  },
+
+  buildRedpenMarkup(text, errors, rewrites) {
+    let markup = text;
+    // 错别字标记：红色删除线 + 正确字旁注
+    for (const e of errors) {
+      markup = markup.replaceAll(e.wrong, '<span class="redpen-error"><span class="wrong-char">' + e.wrong + '</span><span class="correct-char">' + e.correct + '</span></span>');
+    }
+    // 不通顺句子标记
+    for (const r of rewrites) {
+      markup = markup.replaceAll(r.original, '<span class="redpen-rewrite">' + r.original + '<span class="rewrite-note">' + (r.issue || '不通顺') + '</span></span>');
+    }
+    // 换行转为 <br>
+    markup = markup.replace(/\n/g, '<br>');
+    return markup;
   },
 
   detectErrors(text) {
