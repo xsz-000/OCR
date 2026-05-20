@@ -1,7 +1,10 @@
-﻿// ====== DeepSeek API 配置 ======
-// 填入你的 DeepSeek API Key
+﻿// ====== OCR & AI 配置 ======
 const CONFIG = {
-  DEEPSEEK_API_KEY: 'sk-998c2ea355de4368a58834e5f61af9ae',
+  // PaddleOCR 本地服务（免费离线 OCR）
+  PADDLE_OCR_URL: 'http://localhost:5000/api/ocr',
+
+  // DeepSeek API（评分用，可选）
+  DEEPSEEK_API_KEY: '',
   DEEPSEEK_API_URL: 'https://api.deepseek.com/v1/chat/completions',
   DEEPSEEK_MODEL: 'deepseek-chat',
 };
