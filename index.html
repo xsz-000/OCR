@@ -292,7 +292,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            导出 PDF
+            导出带红笔批注的 PDF
           </button>
           <button class="btn btn-secondary press-haptic" id="newEssayBtn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -308,26 +308,18 @@
 
   </div>
 
-  <!-- Tesseract OCR -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script>
-    (function() {
-      if (typeof Tesseract !== 'undefined') return;
-      var s = document.createElement('script');
-      s.src = 'https://unpkg.com/tesseract.js@5/dist/tesseract.min.js';
-      document.head.appendChild(s);
-    })();
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="js/config.js"></script>
   <script src="js/app.js"></script>
   <script src="js/router.js"></script>
   <script src="js/ocr.js"></script>
   <script src="js/grader.js"></script>
+  <script src="js/pdfEngine.js"></script>
   <script src="js/export.js"></script>
   <script src="js/animations.js"></script>
 </body>
 </html>
+
 
 
 

@@ -400,7 +400,7 @@
 }
 
 .handwrite-text {
-  font-family: "Ma Shan Zheng", "QingSongShouXieTi", "QingSong", "清松手写体", "KaiTi", "STKaiti", "楷体", cursive, serif;
+  font-family: "Ma Shan Zheng", "QingSongShouXieTi", "清松手写体", "KaiTi", "STKaiti", "楷体", cursive, serif;
   font-size: 16px;
   line-height: 1.8;
   color: #CC0000;
@@ -417,5 +417,6 @@
   padding-left: 42px;
   line-height: 1.5;
 }
+
 
 
