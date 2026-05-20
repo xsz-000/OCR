@@ -21,7 +21,7 @@ def get_ocr():
         ocr_engine = PaddleOCR(
             use_angle_cls=True,
             lang='ch',
-            show_log=False
+            # show_log=False
         )
         print('[OCR] 初始化完成')
     return ocr_engine
@@ -79,3 +79,4 @@ if __name__ == '__main__':
     print(f'[OCR Server] 启动在 http://localhost:{port}')
     print(f'[OCR Server] API 端点: POST http://localhost:{port}/api/ocr')
     app.run(host='0.0.0.0', port=port, debug=False)
+

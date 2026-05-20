@@ -1,26 +1,27 @@
 ﻿// ===========================================================
-// ocr.js — 图片压缩 + PaddleOCR（本地离线） + 可选 AI 评分
+// ocr.js — 图片压缩 + Tesseract.js 纯前端 OCR + 可选 AI 评分
+// 不需要任何后端服务，完全在浏览器运行
 // ===========================================================
 const OCR = {
   async recognize(file, onProgress) {
     App.updateStep(0);
     if (onProgress) onProgress(0.05);
 
-    // 1. 压缩图片到 1MB
-    const base64 = await this.compressImage(file, 1024 * 1024);
-    if (onProgress) onProgress(0.3);
+    // 1. 压缩图片
+    const base64 = await this.compressImage(file, 800 * 1024);
+    if (onProgress) onProgress(0.15);
     App.updateStep(1);
 
-    // 2. 调用本地 PaddleOCR 服务
-    const ocrText = await this.callPaddleOCR(base64, onProgress);
+    // 2. Tesseract.js 纯前端 OCR
+    const ocrText = await this.runTesseract(base64, onProgress);
     if (onProgress) onProgress(0.6);
     App.updateStep(2);
 
     if (!ocrText || ocrText.length < 5) {
-      throw new Error('未能识别出有效文字。请确保：图片清晰无遮挡 / 文字正对镜头 / 光线充足');
+      throw new Error('未能识别出有效文字。请确保：\n1. 图片清晰无遮挡\n2. 文字正对镜头\n3. 光线充足');
     }
 
-    // 3. DeepSeek 评分（可选，配了 Key 就用）
+    // 3. DeepSeek 评分（可选）
     let gradeResult = null;
     if (CONFIG.DEEPSEEK_API_KEY) {
       try {
@@ -46,7 +47,7 @@ const OCR = {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
           let { width, height } = img;
-          const maxDim = 2000;
+          const maxDim = 1600;
           if (width > maxDim || height > maxDim) {
             const ratio = Math.min(maxDim / width, maxDim / height);
             width = Math.floor(width * ratio);
@@ -59,10 +60,10 @@ const OCR = {
           const tryCompress = () => {
             const dataUrl = canvas.toDataURL('image/jpeg', quality);
             const size = Math.round((dataUrl.length * 3) / 4);
-            if (size <= maxSize || quality <= 0.06) {
-              resolve(dataUrl.split(',')[1]);
+            if (size <= maxSize || quality <= 0.08) {
+              resolve(dataUrl);
             } else {
-              quality -= 0.08;
+              quality -= 0.1;
               tryCompress();
             }
           };
@@ -76,28 +77,31 @@ const OCR = {
     });
   },
 
-  // 调用本地 PaddleOCR 服务
-  async callPaddleOCR(base64Image, onProgress) {
-    if (onProgress) onProgress(0.15);
+  runTesseract(base64DataUrl, onProgress) {
+    return new Promise((resolve, reject) => {
+      if (typeof Tesseract === 'undefined') {
+        reject(new Error('Tesseract OCR 引擎加载失败，请检查网络连接'));
+        return;
+      }
 
-    const response = await fetch(CONFIG.PADDLE_OCR_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: base64Image })
+      const timeout = setTimeout(() => reject(new Error('OCR 识别超时，请重试')), 120000);
+
+      Tesseract.recognize(base64DataUrl, 'chi_sim', {
+        logger: (m) => {
+          if (m.status === 'recognizing text' && onProgress) {
+            onProgress(0.15 + m.progress * 0.45);
+          }
+        }
+      }).then(({ data }) => {
+        clearTimeout(timeout);
+        resolve((data.text || '').trim());
+      }).catch(err => {
+        clearTimeout(timeout);
+        reject(new Error('识别失败: ' + (err.message || '')));
+      });
     });
-
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error('OCR 服务错误: ' + (err.error || 'HTTP ' + response.status));
-    }
-
-    if (onProgress) onProgress(0.5);
-
-    const data = await response.json();
-    return data.text || '';
   },
 
-  // DeepSeek 评分（可选）
   async callDeepSeekForGrade(ocrText, onProgress) {
     if (onProgress) onProgress(0.7);
 
